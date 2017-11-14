@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 julia 0.6-
 # SPSBase
+=======
+julia 0.5
+>>>>>>> f269ab1... SPSInterface.jl generated files.

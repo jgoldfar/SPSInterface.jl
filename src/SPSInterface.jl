@@ -13,7 +13,7 @@ const match_singleHead = r"#\s*([^#]+)"
 function importFile(path::AbstractString)
     parsingOverallSchedule = false
     overallSchedule = Dict(i => Tuple{Float64, Float64}[] for i in 1:5)
-    
+
     parsingEmployee = false
     parsingAvailability = false
     tmpEmployeeName = ""
@@ -50,7 +50,7 @@ function importFile(path::AbstractString)
             if tripleHeadMatch != nothing
                 continue
             end
-            
+
             if parsingAvailability && doubleHeadMatch != nothing
                 # New employee
                 # info("Found new employee: $(doubleHeadMatch[1])")

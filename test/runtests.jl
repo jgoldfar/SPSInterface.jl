@@ -65,7 +65,7 @@ end
             exportFile(testFileMCompare, employeeListM)
 
             @test read(testFileMCompare, String) == read(testFileMExpected, String)
-            
+
             rm(testFileMCompare, force=true)
         end
         @testset "IO with BitScheduleLists" begin
@@ -81,10 +81,10 @@ end
             exportFile(testFile1Compare1, sched1BSL1)
             @test read(testFile1Compare1, String) == read(testFile1Expected1, String)
             rm(testFile1Compare1, force=true)
-            
+
             # Schedule everyone during all of their availability -> Reproduce original
             # schedule (normalized, in some sense.)
-            fill!(sched1BSL1.vec, true) 
+            fill!(sched1BSL1.vec, true)
 
             testFile1Compare2 = joinpath(@__DIR__, "testScheduleSimple.dat-compare2")
             testFile1Expected2 = joinpath(@__DIR__, "testScheduleSimple.dat-expected")
