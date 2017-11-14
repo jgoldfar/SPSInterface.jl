@@ -27,8 +27,8 @@ matrix:
 
 ## uncomment the following lines to override the default test script
 script:
-  - julie -e 'Pkg.clone("https://github.com/jgoldfar/SPSBase.jl.git"); Pkg.build("SPSBase");'
-  - julie -e 'Pkg.clone("https://github.com/jgoldfar/SPSRunner.jl.git"); Pkg.build("SPSRunner");'
+  - julia -e 'Pkg.clone("https://github.com/jgoldfar/SPSBase.jl.git"); Pkg.build("SPSBase");'
+  - julia -e 'Pkg.clone("https://github.com/jgoldfar/SPSRunner.jl.git"); Pkg.build("SPSRunner");'
   - julia -e 'Pkg.clone(pwd()); Pkg.build("SPSInterface"); Pkg.test("SPSInterface"; coverage=true)'
 
 after_success:
