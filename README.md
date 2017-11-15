@@ -3,10 +3,9 @@
 [![Build Status](https://travis-ci.org/jgoldfar/SPSInterface.jl.svg?branch=master)](https://travis-ci.org/jgoldfar/SPSInterface.jl)
 
 [![Coverage Status](https://coveralls.io/repos/jgoldfar/SPSInterface.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/jgoldfar/SPSInterface.jl?branch=master)
-
 [![codecov.io](http://codecov.io/github/jgoldfar/SPSInterface.jl/coverage.svg?branch=master)](http://codecov.io/github/jgoldfar/SPSInterface.jl?branch=master)
 
-SPSRunner.jl uses SPSBase.jl, JuMP, and Coin-OR packages to solve the scheduling problem.
+SPSInterface.jl uses [SPSBase.jl](https://github.com/jgoldfar/SPSBase.jl) and [SPSRunner.jl](https://github.com/jgoldfar/SPSRunner.jl) to provide a user-friendly interface for scheduling problem solvers.
 
 Version: v0.0
 
