@@ -18,19 +18,19 @@ matrix:
     - julia: nightly
 
 sudo: false
-cache:
-  directories:
-  - $HOME/usr
+# cache:
+#   directories:
+#   - $HOME/usr
 
 ## uncomment and modify the following lines to manually install system packages
-addons:
-  apt: # apt-get for linux
-    packages:
-    - gfortran
+# addons:
+#   apt: # apt-get for linux
+#     packages:
+#     - gfortran
 
-env:
-  - MAKEFLAGS="-j3"
-    LD_LIBRARY_PATH=$HOME/usr/lib
+# env:
+#   - MAKEFLAGS="-j3"
+#     LD_LIBRARY_PATH=$HOME/usr/lib
 
 # before_script: # homebrew for mac
 #   - if [ $TRAVIS_OS_NAME = osx ]; then brew update; fi
@@ -39,16 +39,9 @@ env:
 ## uncomment the following lines to override the default test script
 script:
   - julia -e 'Pkg.clone("https://github.com/jgoldfar/SPSBase.jl.git"); Pkg.build("SPSBase");'
-  - travis_wait 30 julia -e 'Pkg.clone("https://github.com/jgoldfar/SPSRunner.jl.git")' > SPSRunner-clone.log 2>&1
-  - travis_wait 20 julia -e 'Pkg.build("SPSRunner")' > SPSRunner-build.log 2>&1
   - julia -e 'Pkg.clone(pwd())'
   - julia -e 'Pkg.build("SPSInterface")'
   - julia -e 'Pkg.test("SPSInterface"; coverage=true)'
-
-before_cache:
-  - cp -R $HOME/.julia/*/Cbc/deps/usr $HOME
-  - cp -R $HOME/.julia/*/Ipopt/deps/usr $HOME
-  - cp -R $HOME/.julia/*/CoinOptServices/deps/usr $HOME
 
 after_success:
   # push coverage results to Coveralls
