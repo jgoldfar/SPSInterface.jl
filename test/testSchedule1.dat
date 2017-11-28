@@ -26,11 +26,11 @@ MinimumGap 1e-2
 
 % Subsubsections are not currently parsed to deduce any structure
 % of the data. Support for this functionality may be added later.
-% For now, these read as regular Markdown sections, allowing 
+% For now, these read as regular Markdown sections, allowing
 % documentation to be added as plain text.
 ### Couenne Solver
 % For example, we may set paths:
-ExecutablePath /usr/local/bin/couenne 
+ExecutablePath /usr/local/bin/couenne
 
 ### Bonmin Solver
 ExecutablePath /usr/local/bin/bonmin
