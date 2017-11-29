@@ -15,10 +15,12 @@ end
         testFile1 = joinpath(@__DIR__, "testSchedule1.dat")
         osched1, employeeList1 = importFile(testFile1)
 
+        # Overall schedule extracted accurately
         @test first(osched1[1]) == (9.0, 17.5) # M 9-17:30
         @test first(osched1[2]) == (9.0, 17.0) # T 9-17
         @test first(osched1[4]) == (9.0, 19.0) # R 9-19
 
+        # Check that all employees are extracted
         emp1 = employeeList1[1]
         @test isapprox(emp1.maxTime, 10) # MaxHours 10
         @test isempty(avail(emp1, 2)) && isempty(avail(emp1, :day4))
@@ -71,7 +73,6 @@ end
             oschedS, employeeListS = importFile(testFileS)
 
             sched1BSL1 = BitScheduleList(employeeListS, 1//2)
-            @show typeof(sched1BSL1)
 
             @test length(sched1BSL1.vec) == length(sched1BSL1.times) >= 22
 
