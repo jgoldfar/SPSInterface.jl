@@ -95,13 +95,15 @@ end
         testFileS = joinpath(@__DIR__, "testScheduleSimple.dat")
         oschedS, employeeListS = importFile(testFileS)
 
-        testFileSCompare = joinpath(@__DIR__, "testScheduleSimple.dat-compare")
-        testFileSExpected = joinpath(@__DIR__, "testScheduleSimple.dat-expected")
-        exportFile(testFileSCompare, employeeListS)
+            testFileMCompare = joinpath(@__DIR__, "testScheduleMetadata.dat-compare")
+            testFileMExpected = joinpath(@__DIR__, "testScheduleMetadata.dat-expected")
+            exportFile(testFileMCompare, employeeListM)
 
-        @test read(testFileSCompare, String) == read(testFileSExpected, String)
+            @test read(testFileMCompare, String) == read(testFileMExpected, String)
 
-        rm(testFileSCompare, force=true)
+            rm(testFileSCompare, force=true)
+        end
+
         # sched1BSL1 = SPSBase.BitScheduleList(employeeList1, 1//2)
 
         # @test length(sched1BSL1.vec) == length(sched1BSL1.times) >= 22

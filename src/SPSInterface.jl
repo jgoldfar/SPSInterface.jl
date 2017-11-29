@@ -18,6 +18,7 @@ function importFile(path::AbstractString)
     parsingAvailability = false
     tmpEmployeeName = ""
     tmpEmployeeMaxHours = Inf
+    tmpEmployeeSpecialty = 0
     tmpEmployeeAvail = SPSBase.emptySchedule(Float64)
 
     employees = Employee{Float64}[]
@@ -30,7 +31,7 @@ function importFile(path::AbstractString)
                 # Finalize employee parsing
                 parsingEmployee = false
                 if !isempty(tmpEmployeeAvail)
-                    push!(employees, Employee(String(tmpEmployeeName), tmpEmployeeAvail, tmpEmployeeMaxHours))
+                    push!(employees, Employee(String(tmpEmployeeName), tmpEmployeeAvail, tmpEmployeeMaxHours, tmpEmployeeSpecialty))
                 end
                 tmpEmployeeName = ""
                 tmpEmployeeMaxHours = Inf
@@ -74,6 +75,8 @@ function importFile(path::AbstractString)
                 parse_SchedLine!(tmpEmployeeAvail, line)
             elseif startswith(line, "maxhours")
                 tmpEmployeeMaxHours = min(parse(Float64, line[9:end]), tmpEmployeeMaxHours)
+            elseif startswith(line, "specialtycode")
+                tmpEmployeeSpecialty = parse(Int, line[14:end])
             end
         elseif parsingOverallSchedule
             line = lowercase(line)
@@ -85,11 +88,12 @@ function importFile(path::AbstractString)
     if parsingEmployee
         # Finalize employee parsing
         if !isempty(tmpEmployeeAvail)
-            push!(employees, Employee(String(tmpEmployeeName), tmpEmployeeAvail, tmpEmployeeMaxHours))
+            push!(employees, Employee(String(tmpEmployeeName), tmpEmployeeAvail, tmpEmployeeMaxHours, tmpEmployeeSpecialty))
         end
         tmpEmployeeName = ""
         tmpEmployeeMaxHours = Inf
         tmpEmployeeAvail = SPSBase.emptySchedule(Float64)
+        tmpEmployeeSpecialty = 0
     end
     overallSchedule, employees
 end
