@@ -2,7 +2,7 @@ VERSION >= v"0.4.0-dev+6521" && __precompile__()
 module SPSInterface
 
 using SPSBase
-export importFile, exportFile, Schedule, Employee
+export importFile, exportFile, Schedule, Employee, BitScheduleList
 
 _is_comment(line::AbstractString) = isempty(line) || startswith(line, '%')
 _is_secHeader(line::AbstractString) = startswith(line, '#')

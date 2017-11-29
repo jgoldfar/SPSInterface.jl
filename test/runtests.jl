@@ -103,6 +103,9 @@ end
 
             rm(testFileSCompare, force=true)
         end
+        @testset "IO with BitScheduleLists" begin
+            testFileS = joinpath(@__DIR__, "testScheduleSimple.dat")
+            oschedS, employeeListS = importFile(testFileS)
 
         # sched1BSL1 = SPSBase.BitScheduleList(employeeList1, 1//2)
 
@@ -110,9 +113,23 @@ end
 
         # sched1BSL2 = SPSBase.BitScheduleList(employeeList1, 1//4)
 
-        # @test length(sched1BSL2.vec) == length(sched1BSL2.times) >= 44
+            @test length(sched1BSL1.vec) == length(sched1BSL1.times) >= 22
 
-        # testFile1Compare2 = joinpath(@__DIR__, "testScheduleSimple.dat-compare2")
-        # exportFile(testFile1Compare2, sched1BSL2)
+            testFile1Compare1 = joinpath(@__DIR__, "testScheduleSimple.dat-compare1")
+            testFile1Expected1 = joinpath(@__DIR__, "testScheduleSimple.dat-expected1")
+            exportFile(testFile1Compare1, sched1BSL1)
+            @test read(testFile1Compare1, String) == read(testFile1Expected1, String)
+            rm(testFile1Compare1, force=true)
+
+            # Schedule everyone during all of their availability -> Reproduce original
+            # schedule (normalized, in some sense.)
+            fill!(sched1BSL1.vec, true)
+
+            testFile1Compare2 = joinpath(@__DIR__, "testScheduleSimple.dat-compare2")
+            testFile1Expected2 = joinpath(@__DIR__, "testScheduleSimple.dat-expected")
+            exportFile(testFile1Compare2, sched1BSL1)
+            @test read(testFile1Compare2, String) == read(testFile1Expected2, String)
+            rm(testFile1Compare2, force=true)
+        end
     end
 end
