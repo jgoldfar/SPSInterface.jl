@@ -1,0 +1,11 @@
+# Availability
+## Max G
+MaxHours 20
+M 9-12
+W 10-14
+F 11-13, 14:15-16:45
+
+## Limited 1
+MaxHours -1
+SpecialtyCode 30
+M 15-16
