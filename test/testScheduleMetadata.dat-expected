@@ -1,0 +1,17 @@
+## Max G
+MaxHours 20.0
+M 9-12
+T 
+W 10-14
+R 
+F 11-13, 14:15-16:45
+
+## Limited 1
+MaxHours -1.0
+SpecialtyCode 30
+M 15-16
+T 
+W 
+R 
+F 
+

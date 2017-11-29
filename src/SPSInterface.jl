@@ -2,7 +2,7 @@ VERSION >= v"0.4.0-dev+6521" && __precompile__()
 module SPSInterface
 
 using SPSBase
-export importFile, exportFile, Schedule, Employee
+export importFile, exportFile, Schedule, Employee, BitScheduleList
 
 _is_comment(line::AbstractString) = isempty(line) || startswith(line, '%')
 _is_secHeader(line::AbstractString) = startswith(line, '#')
@@ -18,6 +18,7 @@ function importFile(path::AbstractString)
     parsingAvailability = false
     tmpEmployeeName = ""
     tmpEmployeeMaxHours = Inf
+    tmpEmployeeSpecialty = 0
     tmpEmployeeAvail = SPSBase.emptySchedule(Float64)
 
     employees = Employee{Float64}[]
@@ -30,7 +31,7 @@ function importFile(path::AbstractString)
                 # Finalize employee parsing
                 parsingEmployee = false
                 if !isempty(tmpEmployeeAvail)
-                    push!(employees, Employee(String(tmpEmployeeName), tmpEmployeeAvail, tmpEmployeeMaxHours))
+                    push!(employees, Employee(String(tmpEmployeeName), tmpEmployeeAvail, tmpEmployeeMaxHours, tmpEmployeeSpecialty))
                 end
                 tmpEmployeeName = ""
                 tmpEmployeeMaxHours = Inf
@@ -74,6 +75,8 @@ function importFile(path::AbstractString)
                 parse_SchedLine!(tmpEmployeeAvail, line)
             elseif startswith(line, "maxhours")
                 tmpEmployeeMaxHours = min(parse(Float64, line[9:end]), tmpEmployeeMaxHours)
+            elseif startswith(line, "specialtycode")
+                tmpEmployeeSpecialty = parse(Int, line[14:end])
             end
         elseif parsingOverallSchedule
             line = lowercase(line)
@@ -85,11 +88,12 @@ function importFile(path::AbstractString)
     if parsingEmployee
         # Finalize employee parsing
         if !isempty(tmpEmployeeAvail)
-            push!(employees, Employee(String(tmpEmployeeName), tmpEmployeeAvail, tmpEmployeeMaxHours))
+            push!(employees, Employee(String(tmpEmployeeName), tmpEmployeeAvail, tmpEmployeeMaxHours, tmpEmployeeSpecialty))
         end
         tmpEmployeeName = ""
         tmpEmployeeMaxHours = Inf
         tmpEmployeeAvail = SPSBase.emptySchedule(Float64)
+        tmpEmployeeSpecialty = 0
     end
     overallSchedule, employees
 end
@@ -126,9 +130,11 @@ function _parse_time(line)::Float64
         parse(Int, line)
     end
 end
-# function exportFile(path::AbstractString, bsl::BitScheduleList)
-#     exportFile(path, SPSBase.to_sched(bsl))
-# end
+
+# File Export
+function exportFile(path::AbstractString, bsl::BitScheduleList{T}) where {T}
+    exportFile(path, SPSBase.to_sched(bsl))
+end
 function exportFile(path, empList::EmployeeList{T}) where {T}
     open(path, "w") do st
         for emp in empList
@@ -145,6 +151,7 @@ function exportFile(path, empList::EmployeeList{T}) where {T}
     end
     return nothing
 end
+
 function _exportSched(st::IO, s::Schedule{T}) where {T}
     print(st, "M ")
     _exportSchedDay(st, s.day1)

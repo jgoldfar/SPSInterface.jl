@@ -41,25 +41,55 @@ end
         @test all(isempty(last(t)) for t in oschedS)
     end
     @testset "exportFile" begin
-        testFileS = joinpath(@__DIR__, "testScheduleSimple.dat")
-        oschedS, employeeListS = importFile(testFileS)
+        @testset "Simple Input/Output" begin
+            testFileS = joinpath(@__DIR__, "testScheduleSimple.dat")
+            oschedS, employeeListS = importFile(testFileS)
 
-        testFileSCompare = joinpath(@__DIR__, "testScheduleSimple.dat-compare")
-        testFileSExpected = joinpath(@__DIR__, "testScheduleSimple.dat-expected")
-        exportFile(testFileSCompare, employeeListS)
+            testFileSCompare = joinpath(@__DIR__, "testScheduleSimple.dat-compare")
+            testFileSExpected = joinpath(@__DIR__, "testScheduleSimple.dat-expected")
+            @inferred exportFile(testFileSCompare, employeeListS) # Ensure type stability
+            exportFile(testFileSCompare, employeeListS)
 
-        @test read(testFileSCompare, String) == read(testFileSExpected, String)
+            @test read(testFileSCompare, String) == read(testFileSExpected, String)
 
-        rm(testFileSCompare, force=true)
-        # sched1BSL1 = SPSBase.BitScheduleList(employeeList1, 1//2)
-        
-        # @test length(sched1BSL1.vec) == length(sched1BSL1.times) >= 22
+            rm(testFileSCompare, force=true)
+        end
+        @testset "Import/Export Metadata" begin
+            testFileM = joinpath(@__DIR__, "testScheduleMetadata.dat")
+            oschedM, employeeListM = importFile(testFileM)
 
-        # sched1BSL2 = SPSBase.BitScheduleList(employeeList1, 1//4)
+            testFileMCompare = joinpath(@__DIR__, "testScheduleMetadata.dat-compare")
+            testFileMExpected = joinpath(@__DIR__, "testScheduleMetadata.dat-expected")
+            exportFile(testFileMCompare, employeeListM)
 
-        # @test length(sched1BSL2.vec) == length(sched1BSL2.times) >= 44
+            @test read(testFileMCompare, String) == read(testFileMExpected, String)
+            
+            rm(testFileMCompare, force=true)
+        end
+        @testset "IO with BitScheduleLists" begin
+            testFileS = joinpath(@__DIR__, "testScheduleSimple.dat")
+            oschedS, employeeListS = importFile(testFileS)
 
-        # testFile1Compare2 = joinpath(@__DIR__, "testScheduleSimple.dat-compare2")
-        # exportFile(testFile1Compare2, sched1BSL2)
+            sched1BSL1 = BitScheduleList(employeeListS, 1//2)
+            @show typeof(sched1BSL1)
+
+            @test length(sched1BSL1.vec) == length(sched1BSL1.times) >= 22
+
+            testFile1Compare1 = joinpath(@__DIR__, "testScheduleSimple.dat-compare1")
+            testFile1Expected1 = joinpath(@__DIR__, "testScheduleSimple.dat-expected1")
+            exportFile(testFile1Compare1, sched1BSL1)
+            @test read(testFile1Compare1, String) == read(testFile1Expected1, String)
+            rm(testFile1Compare1, force=true)
+            
+            # Schedule everyone during all of their availability -> Reproduce original
+            # schedule (normalized, in some sense.)
+            fill!(sched1BSL1.vec, true) 
+
+            testFile1Compare2 = joinpath(@__DIR__, "testScheduleSimple.dat-compare2")
+            testFile1Expected2 = joinpath(@__DIR__, "testScheduleSimple.dat-expected")
+            exportFile(testFile1Compare2, sched1BSL1)
+            @test read(testFile1Compare2, String) == read(testFile1Expected2, String)
+            rm(testFile1Compare2, force=true)
+        end
     end
 end
