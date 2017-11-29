@@ -67,8 +67,6 @@ function importFile(path::AbstractString)
                     parsingOverallSchedule = false
                     parsingAvailability = false
                 end
-            else
-                warn("Header not recognized on line $(currLineNumber): ", line)
             end
         elseif parsingEmployee
             line = lowercase(line)

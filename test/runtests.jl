@@ -41,6 +41,25 @@ end
         @test all(isempty(last(t)) for t in oschedS)
     end
     @testset "exportFile" begin
+        testFileS = joinpath(@__DIR__, "testScheduleSimple.dat")
+        oschedS, employeeListS = importFile(testFileS)
 
+        testFileSCompare = joinpath(@__DIR__, "testScheduleSimple.dat-compare")
+        testFileSExpected = joinpath(@__DIR__, "testScheduleSimple.dat-expected")
+        exportFile(testFileSCompare, employeeListS)
+
+        @test read(testFileSCompare, String) == read(testFileSExpected, String)
+
+        rm(testFileSCompare, force=true)
+        # sched1BSL1 = SPSBase.BitScheduleList(employeeList1, 1//2)
+        
+        # @test length(sched1BSL1.vec) == length(sched1BSL1.times) >= 22
+
+        # sched1BSL2 = SPSBase.BitScheduleList(employeeList1, 1//4)
+
+        # @test length(sched1BSL2.vec) == length(sched1BSL2.times) >= 44
+
+        # testFile1Compare2 = joinpath(@__DIR__, "testScheduleSimple.dat-compare2")
+        # exportFile(testFile1Compare2, sched1BSL2)
     end
 end
