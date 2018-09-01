@@ -24,8 +24,8 @@ sudo: false
 ## uncomment the following lines to override the default test script
 script:
   - julia -e "SPSBaseURL = \"https://github.com/jgoldfar/SPSBase.jl.git\"; if VERSION >= v\"0.7.0-DEV.5183\"; using Pkg; Pkg.activate(\".\"); Pkg.develop(PackageSpec(url=SPSBaseURL)); else Pkg.clone(SPSBaseURL); Pkg.build(\"SPSBase\"); end"
-  - julia -e "VERSION < v\"0.7-\" && Pkg.clone(pwd()); VERSION >= v\"0.7.0-DEV.5183\"; using Pkg; Pkg.build(\"${JL_PKG}\")"
-  - julia -e "Pkg.test(\"${JL_PKG}\"; coverage=true)'
+  - julia -e "if VERSION >= v\"0.7.0-DEV.5183\"; using Pkg; Pkg.activate(\".\"); end; Pkg.build(\"${JL_PKG}\")"
+  - julia -e "if VERSION >= v\"0.7.0-DEV.5183\"; using Pkg; Pkg.activate(\".\"); end; Pkg.test(\"${JL_PKG}\"; coverage=true)"
 
 after_success:
   # push coverage results to Coveralls
