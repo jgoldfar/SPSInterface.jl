@@ -1,8 +1,10 @@
 ## Documentation: http://docs.travis-ci.com/user/languages/julia/
 language: julia
+
 os:
   - linux
   - osx
+
 julia:
   - 0.6
   - 0.7
@@ -16,33 +18,15 @@ matrix:
     - julia: nightly
 
 sudo: false
-# cache:
-#   directories:
-#   - $HOME/usr
-
-## uncomment and modify the following lines to manually install system packages
-# addons:
-#   apt: # apt-get for linux
-#     packages:
-#     - gfortran
-
-# env:
-#   - MAKEFLAGS="-j3"
-#     LD_LIBRARY_PATH=$HOME/usr/lib
-
-# before_script: # homebrew for mac
-#   - if [ $TRAVIS_OS_NAME = osx ]; then brew update; fi
-#   - if [ $TRAVIS_OS_NAME = osx ]; then brew install gcc; fi
 
 ## uncomment the following lines to override the default test script
 script:
-  - julia -e 'Pkg.clone("https://github.com/jgoldfar/SPSBase.jl.git"); Pkg.build("SPSBase");'
-  - julia -e 'Pkg.clone(pwd())'
-  - julia -e 'Pkg.build("SPSInterface")'
-  - julia -e 'Pkg.test("SPSInterface"; coverage=true)'
+  - julia -e "SPSBaseURL = \"https://github.com/jgoldfar/SPSBase.jl.git\"; if VERSION >= v\"0.7.0-DEV.5183\"; using Pkg; Pkg.activate(\".\"); Pkg.develop(PackageSpec(url=SPSBaseURL)); else Pkg.clone(SPSBaseURL); Pkg.build(\"SPSBase\"); end"
+  - julia -e "if VERSION >= v\"0.7.0-DEV.5183\"; using Pkg; Pkg.activate(\".\"); end; Pkg.build(\"${JL_PKG}\")"
+  - julia -e "if VERSION >= v\"0.7.0-DEV.5183\"; using Pkg; Pkg.activate(\".\"); end; Pkg.test(\"${JL_PKG}\"; coverage=true)"
 
 after_success:
   # push coverage results to Coveralls
-  - julia -e 'cd(Pkg.dir("SPSInterface")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())'
+  - julia -e "VERSION >= v\"0.7.0-DEV.5183\" && using Pkg; Pkg.add(\"Coverage\"); using Coverage; Coveralls.submit(Coveralls.process_folder())"
   # push coverage results to Codecov
-  - julia -e 'cd(Pkg.dir("SPSInterface")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())'
+  - julia -e 'using Coverage; Codecov.submit(Codecov.process_folder())'
